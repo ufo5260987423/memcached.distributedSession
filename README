@@ -1,0 +1,7 @@
+# memcached.distributedSession
+
+------
+
+This tool based on MemCached aims to act as a session-share-component for servers, which include Tomcat 6 and all the higher version.And what you really have to do is just write the configuration file and provide the necessary infomation of memcached servers .
+
+
