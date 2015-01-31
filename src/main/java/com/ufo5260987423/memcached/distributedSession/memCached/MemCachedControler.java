@@ -16,7 +16,7 @@
  *@author Wang Zheng ufo5260987423@163.com
  *
  */
-package com.ufo5260987423.memcached.distributedSession.map;
+package com.ufo5260987423.memcached.distributedSession.memCached;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
+import net.rubyeye.xmemcached.GetsResponse;
 import net.rubyeye.xmemcached.MemcachedClient;
 import net.rubyeye.xmemcached.exception.MemcachedException;
 
@@ -35,30 +36,48 @@ import net.rubyeye.xmemcached.exception.MemcachedException;
  * @date 2015年1月26日 下午5:01:41
  *
  */
-public class MemCachedControler implements MemCachedControlerInf{
+public class MemCachedControler implements MemCachedControlerInf {
 	private MemcachedClient memcachedClient;
-	
-	public MemCachedControler(MemcachedClient memcachedClient){
+
+	public MemCachedControler(MemcachedClient memcachedClient) {
 		this.setMemcachedClient(memcachedClient);
 	}
-	
-	public Object get(String key) throws TimeoutException, InterruptedException, MemcachedException{
-		return this.getMemcachedClient().get(key);
-	}
-	
-	public void set(String key,int exp,Object value) throws TimeoutException, InterruptedException, MemcachedException{
-		this.getMemcachedClient().set(key, exp, value);
-	}
 
-	public List<Map<String,String>> getStat(InetSocketAddress[] address) throws MemcachedException, InterruptedException, TimeoutException{
-		List<Map<String, String>> result=new ArrayList<Map<String, String>>();
-		
-		for(InetSocketAddress tmp :address)
-			result.add(this.getMemcachedClient().stats(tmp));
-		
+	public Object get(String key) throws TimeoutException, InterruptedException, MemcachedException {
+		Object result = null;
+		result = this.getMemcachedClient().get(key);
+		if (null == result)
+			result = this.get(key);
+
 		return result;
 	}
-	
+
+	public Boolean set(String key, int exp, Object value) throws TimeoutException, InterruptedException,
+			MemcachedException {
+		return this.getMemcachedClient().set(key, exp, value);
+	}
+
+	public Boolean casSet(String key, int exp, Object value) throws TimeoutException, InterruptedException,
+			MemcachedException {
+		GetsResponse<Integer> cas = this.getMemcachedClient().gets(key);
+
+		return this.getMemcachedClient().cas(key, exp, value, cas.getCas());
+	}
+
+	public Boolean remove(String key) throws TimeoutException, InterruptedException, MemcachedException {
+		return this.getMemcachedClient().delete(key);
+	}
+
+	public List<Map<String, String>> getStat(InetSocketAddress[] address) throws MemcachedException,
+			InterruptedException, TimeoutException {
+		List<Map<String, String>> result = new ArrayList<Map<String, String>>();
+
+		for (InetSocketAddress tmp : address)
+			result.add(this.getMemcachedClient().stats(tmp));
+
+		return result;
+	}
+
 	/**
 	 * @return the memcachedClient
 	 */
@@ -68,20 +87,28 @@ public class MemCachedControler implements MemCachedControlerInf{
 
 	/**
 	 * this memcachedClient may contain many servers
-	 * @param memcachedClient the memcachedClient to set
+	 * 
+	 * @param memcachedClient
+	 *            the memcachedClient to set
 	 */
 	public void setMemcachedClient(MemcachedClient memcachedClient) {
 		this.memcachedClient = memcachedClient;
 	}
 
-	/* (non-Javadoc)
-	 * <p>Title: addServer</p>
-	 * <p>Description: </p>
+	/*
+	 * (non-Javadoc) <p>Title: addServer</p> <p>Description: </p>
+	 * 
 	 * @param serverIp
+	 * 
 	 * @param port
+	 * 
 	 * @param weight
+	 * 
 	 * @throws IOException
-	 * @see com.ufo5260987423.memcached.distributedSession.memCached.MemCachedControlerInf#addServer(java.lang.String, java.lang.Integer, java.lang.Integer) 
+	 * 
+	 * @see com.ufo5260987423.memcached.distributedSession.memCached.
+	 * MemCachedControlerInf#addServer(java.lang.String, java.lang.Integer,
+	 * java.lang.Integer)
 	 */
 	@Override
 	public synchronized void addServer(String serverIp, Integer port, Integer weight) throws IOException {
@@ -89,16 +116,20 @@ public class MemCachedControler implements MemCachedControlerInf{
 		this.getMemcachedClient().addServer(serverIp, port, weight);
 	}
 
-	/* (non-Javadoc)
-	 * <p>Title: removeServer</p>
-	 * <p>Description: </p>
+	/*
+	 * (non-Javadoc) <p>Title: removeServer</p> <p>Description: </p>
+	 * 
 	 * @param serverIp
+	 * 
 	 * @param port
-	 * @see com.ufo5260987423.memcached.distributedSession.memCached.MemCachedControlerInf#removeServer(java.lang.String, java.lang.Integer) 
+	 * 
+	 * @see com.ufo5260987423.memcached.distributedSession.memCached.
+	 * MemCachedControlerInf#removeServer(java.lang.String, java.lang.Integer)
 	 */
 	@Override
 	public synchronized void removeServer(String serverIp, Integer port) {
 		// TODO Auto-generated method stub
-		this.getMemcachedClient().removeServer(serverIp+" "+port);
+		this.getMemcachedClient().removeServer(serverIp + " " + port);
 	}
+
 }

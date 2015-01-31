@@ -16,7 +16,7 @@
  *@author Wang Zheng ufo5260987423@163.com
  *
  */
-package com.ufo5260987423.memcached.distributedSession.map;
+package com.ufo5260987423.memcached.distributedSession.memCached;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -46,10 +46,18 @@ public interface MemCachedControlerInf {
 	/*
 	 * exp is the living time on memcached
 	 */
-	public void set(String key, int exp, Object value) throws TimeoutException, InterruptedException,
+	public Boolean set(String key, int exp, Object value) throws TimeoutException, InterruptedException,
+			MemcachedException;
+
+	/*
+	 * exp is the living time on memcached
+	 */
+	public Boolean casSet(String key, int exp, Object value) throws TimeoutException, InterruptedException,
 			MemcachedException;
 
 	public Object get(String key) throws TimeoutException, InterruptedException, MemcachedException;
+
+	public Boolean remove(String key) throws TimeoutException, InterruptedException, MemcachedException;
 
 	/*
 	 * @param address is a array of InetSocketAddress
