@@ -184,8 +184,10 @@ public class ConsistentBackupControler implements BackupControlerInf {
 			for (int i = 0; i < this.getBackupAmount(); i++) {
 				tmp = this.hash(tmp);
 				result = this.getMemCachedControler().get(tmp);
-				if (null != result)
+				if (null != result){
+					this.activeAllBackup(key);
 					break;
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -225,6 +227,42 @@ public class ConsistentBackupControler implements BackupControlerInf {
 			result=false;
 		}
 		return result;
+	}
+
+	/* (non-Javadoc)
+	 * <p>Title: isExist</p>
+	 * <p>Description: </p>
+	 * @param key
+	 * @return
+	 * @see com.ufo5260987423.memcached.distributedSession.backup.BackupControlerInf#isExist(java.lang.String) 
+	 */
+	@Override
+	public Boolean isExist(String key) {
+		// TODO Auto-generated method stub
+		String tmp = key;
+		Boolean result = false;
+		try {
+			for (int i = 0; i < this.getBackupAmount(); i++) {
+				tmp = this.hash(tmp);
+				result = result || this.getMemCachedControler().isExist(key);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			result=result||false;
+		}
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * <p>Title: activeAllBackup</p>
+	 * <p>Description: </p>
+	 * @param key
+	 * @see com.ufo5260987423.memcached.distributedSession.backup.BackupControlerInf#activeAllBackup(java.lang.String) 
+	 */
+	@Override
+	public void activeAllBackup(String key) {
+		// TODO Auto-generated method stub
+		this.isExist(key);
 	}
 
 }

@@ -35,6 +35,15 @@ import net.rubyeye.xmemcached.exception.MemcachedException;
  *
  */
 public interface MemCachedControlerInf {
+	
+	/**
+	 * must cas
+	 * @throws MemcachedException 
+	 * @throws InterruptedException 
+	 * @throws TimeoutException 
+	 */
+	public Boolean isExist(String key) throws TimeoutException, InterruptedException, MemcachedException;
+	
 	public void setMemcachedClient(MemcachedClient memcachedClient);
 
 	public MemcachedClient getMemcachedClient();

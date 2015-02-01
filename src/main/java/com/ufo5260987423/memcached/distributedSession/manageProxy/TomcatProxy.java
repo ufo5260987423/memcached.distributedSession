@@ -32,11 +32,20 @@ import org.apache.catalina.session.ManagerBase;
  *
  */
 public class TomcatProxy extends ManagerBase {
+
+	/**
+	 * identify this tomcat node
+	 */
+	private String nodeName;
+	
+	protected final boolean distributable=true;
+	
 	/**
 	 * The descriptive name of this Manager implementation (for logging).
 	 */
-	protected static final String name = "TomcatProxy";
 	
+	protected static final String name = "TomcatProxy";
+
 	/*
 	 * this sessions must load DistributedSessionsConcurrentHashMap from spring 
 	 */
@@ -70,4 +79,17 @@ public class TomcatProxy extends ManagerBase {
 		// TODO Auto-generated method stub
 
 	}
+	
+	public String getNodeName() {
+		return nodeName;
+	}
+
+	public void setNodeName(String nodeName) {
+		this.nodeName = nodeName;
+	}
+	
+	 @Override
+	    public Session[] findSessions() {
+		 return null;
+	 }
 }

@@ -57,6 +57,10 @@ public class MemCachedControler implements MemCachedControlerInf {
 		return this.getMemcachedClient().set(key, exp, value);
 	}
 
+	public Boolean isExist(String key) throws TimeoutException, InterruptedException, MemcachedException{
+		return null!=this.getMemcachedClient().gets(key);
+	}
+	
 	public Boolean casSet(String key, int exp, Object value) throws TimeoutException, InterruptedException,
 			MemcachedException {
 		GetsResponse<Integer> cas = this.getMemcachedClient().gets(key);

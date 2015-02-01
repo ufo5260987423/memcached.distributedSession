@@ -29,6 +29,10 @@ import com.ufo5260987423.memcached.distributedSession.memCached.MemCachedControl
  */
 public interface BackupControlerInf {
 	
+	public void activeAllBackup(String key);
+	
+	public Boolean isExist(String key);
+	
 	public int getBackupAmount();
 
 	public void setBackupAmount(int backupAmount);
