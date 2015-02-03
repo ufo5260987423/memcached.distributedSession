@@ -57,15 +57,19 @@ public class MemCachedControler implements MemCachedControlerInf {
 		return this.getMemcachedClient().set(key, exp, value);
 	}
 
-	public Boolean isExist(String key) throws TimeoutException, InterruptedException, MemcachedException{
-		return null!=this.getMemcachedClient().gets(key);
+	public Boolean isExist(String key) throws TimeoutException, InterruptedException, MemcachedException {
+		return null != this.getMemcachedClient().gets(key);
 	}
-	
+
 	public Boolean casSet(String key, int exp, Object value) throws TimeoutException, InterruptedException,
 			MemcachedException {
-		GetsResponse<Integer> cas = this.getMemcachedClient().gets(key);
+		if (!this.isExist(key))
+			return this.set(key, exp, value);
+		else {
+			GetsResponse<Integer> cas = this.getMemcachedClient().gets(key);
 
-		return this.getMemcachedClient().cas(key, exp, value, cas.getCas());
+			return this.getMemcachedClient().cas(key, exp, value, cas.getCas());
+		}
 	}
 
 	public Boolean remove(String key) throws TimeoutException, InterruptedException, MemcachedException {
@@ -134,6 +138,20 @@ public class MemCachedControler implements MemCachedControlerInf {
 	public synchronized void removeServer(String serverIp, Integer port) {
 		// TODO Auto-generated method stub
 		this.getMemcachedClient().removeServer(serverIp + " " + port);
+	}
+
+	/*
+	 * (non-Javadoc) <p>Title: clear</p> <p>Description: </p>
+	 * 
+	 * @return
+	 * 
+	 * @see com.ufo5260987423.memcached.distributedSession.memCached.
+	 * MemCachedControlerInf#clear()
+	 */
+	@Override
+	public void clear() throws TimeoutException, InterruptedException, MemcachedException {
+		// TODO Auto-generated method stub
+		this.getMemcachedClient().flushAll();
 	}
 
 }

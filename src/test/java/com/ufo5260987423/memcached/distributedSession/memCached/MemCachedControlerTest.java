@@ -21,8 +21,8 @@ package com.ufo5260987423.memcached.distributedSession.memCached;
 import static org.junit.Assert.*;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 /**
@@ -41,108 +41,112 @@ public class MemCachedControlerTest {
 	 * @return void
 	 * @throws
 	 */
-	private MemCachedControler memCachedControler;
-	
+	private static MemCachedControler memCachedControler = (MemCachedControler) new FileSystemXmlApplicationContext(
+			"/src/test/resources/applicationContext.xml").getBean("memCachedControler");
+
 	@Before
 	public void setUp() throws Exception {
-		ApplicationContext ctx = new FileSystemXmlApplicationContext("/src/test/resources/applicationContext.xml");
-		this.setMemCachedControler((MemCachedControler) ctx.getBean("memCachedControler"));
+		this.getMemCachedControler().clear();
 	}
 
 	/**
-	 * Test method for {@link com.ufo5260987423.memcached.distributedSession.memCached.MemCachedControler#MemCachedControler(net.rubyeye.xmemcached.MemcachedClient)}.
+	 * Test method for
+	 * {@link com.ufo5260987423.memcached.distributedSession.memCached.MemCachedControler#clear()}
+	 * .
 	 */
-	@Test
-	public void testMemCachedControler() {
-		fail("Not yet implemented");
+	@Ignore
+	public void testClear() {
+		try {
+			this.getMemCachedControler().set("testClear", 10, "testClear");
+			this.getMemCachedControler().clear();
+			assertEquals(null==this.getMemCachedControler().get("testClear"), false);
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail();
+		}
 	}
 
 	/**
-	 * Test method for {@link com.ufo5260987423.memcached.distributedSession.memCached.MemCachedControler#get(java.lang.String)}.
+	 * Test method for
+	 * {@link com.ufo5260987423.memcached.distributedSession.memCached.MemCachedControler#get(java.lang.String)}
+	 * .
 	 */
 	@Test
 	public void testGet() {
-		fail("Not yet implemented");
+		try {
+			this.getMemCachedControler().set("testGet", 10, "testGet");
+			assertEquals(this.getMemCachedControler().get("testGet").equals("testGet"), true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail();
+		}
 	}
 
 	/**
-	 * Test method for {@link com.ufo5260987423.memcached.distributedSession.memCached.MemCachedControler#set(java.lang.String, int, java.lang.Object)}.
+	 * Test method for
+	 * {@link com.ufo5260987423.memcached.distributedSession.memCached.MemCachedControler#set(java.lang.String, int, java.lang.Object)}
+	 * .
 	 */
 	@Test
 	public void testSet() {
-		fail("Not yet implemented");
+		try {
+			assertEquals(this.getMemCachedControler().set("testSet", 10, "testSet"), true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail();
+		}
+
 	}
 
 	/**
-	 * Test method for {@link com.ufo5260987423.memcached.distributedSession.memCached.MemCachedControler#isExist(java.lang.String)}.
+	 * Test method for
+	 * {@link com.ufo5260987423.memcached.distributedSession.memCached.MemCachedControler#isExist(java.lang.String)}
+	 * .
 	 */
 	@Test
 	public void testIsExist() {
-		fail("Not yet implemented");
+		try {
+			this.getMemCachedControler().set("testIsExist", 10, "testIsExist");
+			assertEquals(this.getMemCachedControler().isExist("testIsExist"), true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail();
+		}
 	}
 
 	/**
-	 * Test method for {@link com.ufo5260987423.memcached.distributedSession.memCached.MemCachedControler#casSet(java.lang.String, int, java.lang.Object)}.
+	 * Test method for
+	 * {@link com.ufo5260987423.memcached.distributedSession.memCached.MemCachedControler#casSet(java.lang.String, int, java.lang.Object)}
+	 * .
 	 */
 	@Test
 	public void testCasSet() {
-		fail("Not yet implemented");
+		try {
+			assertEquals(this.getMemCachedControler().casSet("testCasSet", 10, "testCasSet"), true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail();
+		}
 	}
 
 	/**
-	 * Test method for {@link com.ufo5260987423.memcached.distributedSession.memCached.MemCachedControler#remove(java.lang.String)}.
+	 * Test method for
+	 * {@link com.ufo5260987423.memcached.distributedSession.memCached.MemCachedControler#remove(java.lang.String)}
+	 * .
 	 */
 	@Test
 	public void testRemove() {
-		fail("Not yet implemented");
-	}
-
-	/**
-	 * Test method for {@link com.ufo5260987423.memcached.distributedSession.memCached.MemCachedControler#getStat(java.net.InetSocketAddress[])}.
-	 */
-	@Test
-	public void testGetStat() {
-		fail("Not yet implemented");
-	}
-
-	/**
-	 * Test method for {@link com.ufo5260987423.memcached.distributedSession.memCached.MemCachedControler#getMemcachedClient()}.
-	 */
-	@Test
-	public void testGetMemcachedClient() {
-		fail("Not yet implemented");
-	}
-
-	/**
-	 * Test method for {@link com.ufo5260987423.memcached.distributedSession.memCached.MemCachedControler#setMemcachedClient(net.rubyeye.xmemcached.MemcachedClient)}.
-	 */
-	@Test
-	public void testSetMemcachedClient() {
-		fail("Not yet implemented");
-	}
-
-	/**
-	 * Test method for {@link com.ufo5260987423.memcached.distributedSession.memCached.MemCachedControler#addServer(java.lang.String, java.lang.Integer, java.lang.Integer)}.
-	 */
-	@Test
-	public void testAddServer() {
-		fail("Not yet implemented");
-	}
-
-	/**
-	 * Test method for {@link com.ufo5260987423.memcached.distributedSession.memCached.MemCachedControler#removeServer(java.lang.String, java.lang.Integer)}.
-	 */
-	@Test
-	public void testRemoveServer() {
-		fail("Not yet implemented");
+		try {
+			this.getMemCachedControler().set("testRemove", 10, "testRemove");
+			assertEquals(this.getMemCachedControler().remove("testRemove"), true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail();
+		}
 	}
 
 	public MemCachedControler getMemCachedControler() {
 		return memCachedControler;
-	}
-
-	public void setMemCachedControler(MemCachedControler memCachedControler) {
-		this.memCachedControler = memCachedControler;
 	}
 
 }

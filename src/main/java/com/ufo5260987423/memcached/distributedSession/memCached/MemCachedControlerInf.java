@@ -35,7 +35,8 @@ import net.rubyeye.xmemcached.exception.MemcachedException;
  *
  */
 public interface MemCachedControlerInf {
-	
+
+	public void clear() throws TimeoutException, InterruptedException, MemcachedException;
 	/**
 	 * must cas
 	 * @throws MemcachedException 
