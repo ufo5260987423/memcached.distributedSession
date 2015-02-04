@@ -246,7 +246,7 @@ public class DistributedSessionsConcurrentHashMap<KEY, VALUE extends Serializabl
 	public void clear() {
 		// TODO Auto-generated method stub
 		try {
-			this.getMemCachedControler().getMemcachedClient().flushAll();
+			this.getMemCachedControler().clear();;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

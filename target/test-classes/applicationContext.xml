@@ -41,4 +41,7 @@
 		class="com.ufo5260987423.memcached.distributedSession.memCached.MemCachedControler">
 		<constructor-arg name="memcachedClient" ref="memcachedClient" /> 
 	</bean>
+	<bean id="consistentBackupControler"
+		class="com.ufo5260987423.memcached.distributedSession.backup.ConsistentBackupControler">
+	</bean>
 </beans>
