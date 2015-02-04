@@ -33,6 +33,9 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
  *
  */
 public class MemCachedControlerTest {
+	
+	private static MemCachedControler memCachedControler = (MemCachedControler) new FileSystemXmlApplicationContext(
+			"/src/test/resources/applicationContext.xml").getBean("memCachedControler");
 
 	/**
 	 * @Title: setUp
@@ -41,9 +44,6 @@ public class MemCachedControlerTest {
 	 * @return void
 	 * @throws
 	 */
-	private static MemCachedControler memCachedControler = (MemCachedControler) new FileSystemXmlApplicationContext(
-			"/src/test/resources/applicationContext.xml").getBean("memCachedControler");
-
 	@Before
 	public void setUp() throws Exception {
 		this.getMemCachedControler().clear();

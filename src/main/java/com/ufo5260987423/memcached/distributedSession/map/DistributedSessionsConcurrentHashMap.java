@@ -30,7 +30,7 @@ import com.ufo5260987423.memcached.distributedSession.backup.BackupControlerInf;
 import com.ufo5260987423.memcached.distributedSession.memCached.MemCachedControlerInf;
 
 /**
- * @ClassName: DistributedSessionsConcurrentHashMap
+ * @ClassName: DistributedConcurrentHashMap
  * @Description: Provide a container for sessions with backup.
  * @author ufo ufo5260987423@163.com
  * @date 2015年1月28日 下午10:08:38

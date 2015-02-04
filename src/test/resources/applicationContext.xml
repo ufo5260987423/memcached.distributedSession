@@ -43,7 +43,14 @@
 	</bean>
 	<bean id="consistentBackupControler"
 		class="com.ufo5260987423.memcached.distributedSession.backup.ConsistentBackupControler">
-		<constructor-arg name="backupAmount" value="2" type="int" /> 
+		<constructor-arg name="backupAmount" value="2" /> 
 		<constructor-arg name="memCachedControler" ref="memCachedControler" /> 
+	</bean>
+	<bean id="distributedConcrrentHashMap"
+		class="com.ufo5260987423.memcached.distributedSession.map.DistributedSessionsConcurrentHashMap">
+		<constructor-arg name="survivingTime" value="300" /> 
+		<constructor-arg name="memCachedControler" ref="memCachedControler" /> 
+		<constructor-arg name="backupControler" ref="backupControler" />
+		<constructor-arg name="retryTimes" value="5" />
 	</bean>
 </beans>
