@@ -45,7 +45,6 @@ public class ConsistentBackupControlerTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		this.getConsistentBackupControler().setBackupAmount(10);
 		this.getConsistentBackupControler().getMemCachedControler().clear();
 	}
 
@@ -103,7 +102,7 @@ public class ConsistentBackupControlerTest {
 	@Test
 	public void testRemove() {
 		try {
-			this.getConsistentBackupControler().set("testRemove", 10, "testRemove");
+			this.getConsistentBackupControler().set("testRemove", 100, "testRemove");
 			assertEquals(this.getConsistentBackupControler().remove("testRemove"), true);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -118,8 +117,13 @@ public class ConsistentBackupControlerTest {
 	 */
 	@Test
 	public void testIsExist() {
-		fail("Not yet implemented");
-	}
+		try {
+			this.getConsistentBackupControler().set("testIsExist", 10, "testIsExist");
+			assertEquals(this.getConsistentBackupControler().isExist("testIsExist"), true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail();
+		}	}
 
 	public ConsistentBackupControler getConsistentBackupControler() {
 		return consistentBackupControler;

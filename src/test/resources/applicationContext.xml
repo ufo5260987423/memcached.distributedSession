@@ -16,7 +16,7 @@
 		class="net.rubyeye.xmemcached.utils.XMemcachedClientFactoryBean"
 		destroy-method="shutdown">
 		<property name="servers">
-			<value>127.0.0.1:11211</value>
+			<value>192.168.0.105:11211 192.168.0.104:11211</value>
 		</property>
 		<!-- nio connection pool size -->
 		<property name="connectionPoolSize" value="2"></property>
@@ -43,5 +43,7 @@
 	</bean>
 	<bean id="consistentBackupControler"
 		class="com.ufo5260987423.memcached.distributedSession.backup.ConsistentBackupControler">
+		<constructor-arg name="backupAmount" value="2" type="int" /> 
+		<constructor-arg name="memCachedControler" ref="memCachedControler" /> 
 	</bean>
 </beans>

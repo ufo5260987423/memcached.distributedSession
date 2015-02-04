@@ -39,6 +39,11 @@ public class ConsistentBackupControler implements BackupControlerInf {
 	 */
 	private int backupAmount;
 	private MemCachedControlerInf memCachedControler;
+	
+	public ConsistentBackupControler(MemCachedControlerInf memCachedControler){
+		this.setBackupAmount(1);
+		this.setMemCachedControler(memCachedControler);
+	}
 
 	public ConsistentBackupControler(int backupAmount, MemCachedControlerInf memCachedControler) {
 		this.setBackupAmount(backupAmount);
@@ -233,7 +238,7 @@ public class ConsistentBackupControler implements BackupControlerInf {
 		try {
 			for (int i = 0; i < this.getBackupAmount(); i++) {
 				tmp = this.hash(tmp);
-				result = result && this.getMemCachedControler().remove(tmp);
+				result = result || this.getMemCachedControler().remove(tmp);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -263,7 +268,7 @@ public class ConsistentBackupControler implements BackupControlerInf {
 		try {
 			for (int i = 0; i < this.getBackupAmount(); i++) {
 				tmp = this.hash(tmp);
-				result = result || this.getMemCachedControler().isExist(key);
+				result = result || this.getMemCachedControler().isExist(tmp);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
