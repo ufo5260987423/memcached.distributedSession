@@ -20,7 +20,6 @@ package com.ufo5260987423.memcached.distributedSession.memCached;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
@@ -69,9 +68,6 @@ public interface MemCachedControlerInf {
 
 	public Boolean remove(String key) throws TimeoutException, InterruptedException, MemcachedException;
 
-	/*
-	 * @param address is a array of InetSocketAddress
-	 */
-	public List<Map<String, String>> getStat(InetSocketAddress[] address) throws MemcachedException,
+	public Map<InetSocketAddress, Map<String, String>> getStat() throws MemcachedException,
 			InterruptedException, TimeoutException;
 }

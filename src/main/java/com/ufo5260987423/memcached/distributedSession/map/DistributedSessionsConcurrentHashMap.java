@@ -22,7 +22,6 @@ import java.io.Serializable;
 import java.net.InetSocketAddress;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -63,14 +62,17 @@ public class DistributedSessionsConcurrentHashMap<KEY, VALUE extends Serializabl
 		// TODO Auto-generated method stub
 		Integer result = new Integer(0);
 		try {
-			List<Map<String, String>> tmp = this.getMemCachedControler().getStat(this.getAddress());
-			for (Map<String, String> item : tmp)
-				result += Integer.parseInt(item.get("curr_items"));
+			Iterator<Entry<InetSocketAddress, Map<String, String>>> i = 
+					this.getMemCachedControler().getStat()
+					.entrySet().iterator();
+
+			while (i.hasNext())
+				result += Integer.parseInt(i.next().getValue().get("curr_items"));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+		System.out.println(result);
 		return result;
 	}
 
@@ -246,7 +248,8 @@ public class DistributedSessionsConcurrentHashMap<KEY, VALUE extends Serializabl
 	public void clear() {
 		// TODO Auto-generated method stub
 		try {
-			this.getMemCachedControler().clear();;
+			this.getMemCachedControler().clear();
+			;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -254,8 +257,8 @@ public class DistributedSessionsConcurrentHashMap<KEY, VALUE extends Serializabl
 	}
 
 	/*
-	 * this method is unsupposed to be use for the giant burden on netIO.
-	 * In tomcat,this method is used for debugging.Please check the nodes.
+	 * this method is unsupposed to be use for the giant burden on netIO. In
+	 * tomcat,this method is used for debugging.Please check the nodes.
 	 * <p>Title: keySet</p> <p>Description: </p>
 	 * 
 	 * @return null
@@ -269,9 +272,9 @@ public class DistributedSessionsConcurrentHashMap<KEY, VALUE extends Serializabl
 	}
 
 	/*
-	 * this method is unsupposed to be use for the giant burden on netIO
-	 * if you are eager for this method ,please re-write findSessions method in ManagerBase(Tomcat).
-	 * <p>Title: values</p> <p>Description: </p>
+	 * this method is unsupposed to be use for the giant burden on netIO if you
+	 * are eager for this method ,please re-write findSessions method in
+	 * ManagerBase(Tomcat). <p>Title: values</p> <p>Description: </p>
 	 * 
 	 * @return null
 	 * 
@@ -284,9 +287,9 @@ public class DistributedSessionsConcurrentHashMap<KEY, VALUE extends Serializabl
 	}
 
 	/*
-	 * this method is unsupposed to be use for the giant burden on netIO.
-	 * And this method is never used in Tomcat
-	 * <p>Title: entrySet</p> <p>Description: </p>
+	 * this method is unsupposed to be use for the giant burden on netIO. And
+	 * this method is never used in Tomcat <p>Title: entrySet</p>
+	 * <p>Description: </p>
 	 * 
 	 * @return null
 	 * 
