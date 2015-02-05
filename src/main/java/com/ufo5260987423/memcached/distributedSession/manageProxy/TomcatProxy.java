@@ -28,6 +28,8 @@ import net.rubyeye.xmemcached.utils.AddrUtil;
 
 import org.apache.catalina.Session;
 import org.apache.catalina.session.ManagerBase;
+import org.apache.juli.logging.Log;
+import org.apache.juli.logging.LogFactory;
 
 import com.ufo5260987423.memcached.distributedSession.backup.BackupControlerInf;
 import com.ufo5260987423.memcached.distributedSession.backup.ConsistentBackupControler;
@@ -52,6 +54,9 @@ public class TomcatProxy extends ManagerBase {
 	private String addresses;
 	private Integer survivingTime;
 
+	@SuppressWarnings("unused")
+	private final Log log = LogFactory.getLog(TomcatProxy.class);
+	
 	protected final boolean distributable = true;
 
 	/**
