@@ -11,7 +11,8 @@
            http://www.springframework.org/schema/tx 
            http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
 	<context:annotation-config />
-	<context:component-scan base-package="com.ufo5260987423.memcached.distributedSession" />
+	<context:component-scan
+		base-package="com.ufo5260987423.memcached.distributedSession" />
 	<bean name="memcachedClient"
 		class="net.rubyeye.xmemcached.utils.XMemcachedClientFactoryBean"
 		destroy-method="shutdown">
@@ -39,17 +40,17 @@
 	</bean>
 	<bean id="memCachedControler"
 		class="com.ufo5260987423.memcached.distributedSession.memCached.MemCachedControler">
-		<constructor-arg name="memcachedClient" ref="memcachedClient" /> 
+		<constructor-arg name="memcachedClient" ref="memcachedClient" />
 	</bean>
 	<bean id="consistentBackupControler"
 		class="com.ufo5260987423.memcached.distributedSession.backup.ConsistentBackupControler">
-		<constructor-arg name="backupAmount" value="2" /> 
-		<constructor-arg name="memCachedControler" ref="memCachedControler" /> 
+		<constructor-arg name="backupAmount" value="2" />
+		<constructor-arg name="memCachedControler" ref="memCachedControler" />
 	</bean>
 	<bean id="distributedSessionsConcrrentHashMap"
 		class="com.ufo5260987423.memcached.distributedSession.map.DistributedSessionsConcurrentHashMap">
-		<constructor-arg name="survivingTime" value="300" /> 
-		<constructor-arg name="memCachedControler" ref="memCachedControler" /> 
+		<constructor-arg name="survivingTime" value="300" />
+		<constructor-arg name="memCachedControler" ref="memCachedControler" />
 		<constructor-arg name="backupControler" ref="consistentBackupControler" />
 		<constructor-arg name="retryTimes" value="5" />
 	</bean>

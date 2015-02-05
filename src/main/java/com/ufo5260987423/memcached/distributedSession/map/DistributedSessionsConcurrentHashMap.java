@@ -18,7 +18,6 @@
  */
 package com.ufo5260987423.memcached.distributedSession.map;
 
-import java.io.Serializable;
 import java.net.InetSocketAddress;
 import java.util.Collection;
 import java.util.Iterator;
@@ -35,7 +34,7 @@ import com.ufo5260987423.memcached.distributedSession.memCached.MemCachedControl
  * @date 2015年1月28日 下午10:08:38
  *
  */
-public class DistributedSessionsConcurrentHashMap<KEY, VALUE extends Serializable> implements Map<KEY, VALUE> {
+public class DistributedSessionsConcurrentHashMap<KEY, VALUE> implements Map<KEY, VALUE> {
 	private MemCachedControlerInf memCachedControler;
 	private InetSocketAddress[] address;
 	private BackupControlerInf backupControler;

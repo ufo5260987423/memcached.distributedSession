@@ -37,7 +37,8 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
  */
 public class DistributedSessionsConcurrentHashMapTest {
 	@SuppressWarnings("unchecked")
-	private static DistributedSessionsConcurrentHashMap<String, String> map = (DistributedSessionsConcurrentHashMap<String, String>) new FileSystemXmlApplicationContext(
+	private static DistributedSessionsConcurrentHashMap<String, String> map = 
+	(DistributedSessionsConcurrentHashMap<String, String>) new FileSystemXmlApplicationContext(
 			"/src/test/resources/applicationContext.xml").getBean("distributedSessionsConcrrentHashMap");
 
 	/**
