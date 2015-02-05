@@ -27,7 +27,7 @@ import net.rubyeye.xmemcached.impl.KetamaMemcachedSessionLocator;
 import net.rubyeye.xmemcached.utils.AddrUtil;
 
 import org.apache.catalina.Session;
-import org.apache.catalina.session.ManagerBase;
+import org.apache.catalina.session.StandardManager;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 
@@ -44,7 +44,7 @@ import com.ufo5260987423.memcached.distributedSession.memCached.MemCachedControl
  * @date 2015年1月28日 下午1:34:14
  *
  */
-public class TomcatProxy extends ManagerBase {
+public class TomcatProxy extends StandardManager {
 
 	/**
 	 * identify this tomcat node
@@ -52,10 +52,12 @@ public class TomcatProxy extends ManagerBase {
 	private String nodeName;
 	private Integer retryTime;
 	private String addresses;
-	private Integer survivingTime;
 
-	@SuppressWarnings("unused")
 	private final Log log = LogFactory.getLog(TomcatProxy.class);
+	/**
+     * The descriptive information string for this implementation.
+     */
+    private static final String info = "TomcatProxy/1.0";
 	
 	protected final boolean distributable = true;
 
@@ -85,12 +87,14 @@ public class TomcatProxy extends ManagerBase {
 	@Override
 	public void load() throws ClassNotFoundException, IOException {
 		// TODO Auto-generated method stub
+		super.load();
+		
 		XMemcachedClientBuilder builder=new XMemcachedClientBuilder(AddrUtil.getAddresses(this.getAddresses()));
 		builder.setSessionLocator(new KetamaMemcachedSessionLocator());
 		MemcachedClient memCachedClient=builder.build();
 		MemCachedControlerInf memCachedControler=new MemCachedControler(memCachedClient);
 		BackupControlerInf backupControler=new ConsistentBackupControler(memCachedControler);
-		this.sessions = new DistributedSessionsConcurrentHashMap<String, Session>(memCachedControler,60*5,backupControler,5);
+		this.sessions = new DistributedSessionsConcurrentHashMap<String, Session>(memCachedControler,this.getMaxInactiveInterval(),backupControler,5);
 		this.sessionIdGenerator.setJvmRoute(this.getNodeName());
 	}
 
@@ -104,7 +108,7 @@ public class TomcatProxy extends ManagerBase {
 	@Override
 	public void unload() throws IOException {
 		// TODO Auto-generated method stub
-
+		super.unload();
 	}
 
 	public String getNodeName() {
@@ -132,14 +136,6 @@ public class TomcatProxy extends ManagerBase {
 		this.retryTime = retryTime;
 	}
 
-	public Integer getSurvivingTime() {
-		return survivingTime;
-	}
-
-	public void setSurvivingTime(Integer survivingTime) {
-		this.survivingTime = survivingTime;
-	}
-
 	public Map<String, Session> getSessions() {
 		return sessions;
 	}
@@ -162,6 +158,15 @@ public class TomcatProxy extends ManagerBase {
 
 	public void setAddresses(String addresses) {
 		this.addresses = addresses;
+	}
+
+	public Log getLog() {
+		return log;
+	}
+
+	@Override
+	public String getInfo() {
+		return info;
 	}
 
 }

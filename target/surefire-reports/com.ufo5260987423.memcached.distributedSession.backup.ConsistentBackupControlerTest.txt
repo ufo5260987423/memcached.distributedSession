@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.ufo5260987423.memcached.distributedSession.backup.ConsistentBackupControlerTest
 -------------------------------------------------------------------------------
-Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.698 sec
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.113 sec
