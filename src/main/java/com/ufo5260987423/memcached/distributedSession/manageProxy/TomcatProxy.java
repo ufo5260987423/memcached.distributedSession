@@ -20,14 +20,17 @@ package com.ufo5260987423.memcached.distributedSession.manageProxy;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 
 import net.rubyeye.xmemcached.MemcachedClient;
 import net.rubyeye.xmemcached.XMemcachedClientBuilder;
 import net.rubyeye.xmemcached.impl.KetamaMemcachedSessionLocator;
 import net.rubyeye.xmemcached.utils.AddrUtil;
 
+import org.apache.catalina.LifecycleException;
+import org.apache.catalina.LifecycleState;
 import org.apache.catalina.Session;
-import org.apache.catalina.session.StandardManager;
+import org.apache.catalina.session.ManagerBase;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 
@@ -44,7 +47,18 @@ import com.ufo5260987423.memcached.distributedSession.memCached.MemCachedControl
  * @date 2015年1月28日 下午1:34:14
  *
  */
-public class TomcatProxy extends StandardManager {
+public class TomcatProxy extends ManagerBase {
+
+	/**
+	 * The descriptive information string for this implementation.
+	 */
+	private static final String info = "TomcatProxy/1.0";
+
+	/**
+	 * The descriptive name of this Manager implementation (for logging).
+	 */
+
+	protected static final String name = "TomcatProxy";
 
 	/**
 	 * identify this tomcat node
@@ -53,62 +67,123 @@ public class TomcatProxy extends StandardManager {
 	private Integer retryTime;
 	private String addresses;
 
-	private final Log log = LogFactory.getLog(TomcatProxy.class);
+	protected boolean distributable = true;
 	/**
-     * The descriptive information string for this implementation.
-     */
-    private static final String info = "TomcatProxy/1.0";
-	
-	protected final boolean distributable = true;
-
-	/**
-	 * The descriptive name of this Manager implementation (for logging).
+	 * Number of sessions that have expired.
 	 */
-
-	protected static final String name = "TomcatProxy";
+	protected final AtomicLong expiredSessions = new AtomicLong(0);
+	private final Log log = LogFactory.getLog(TomcatProxy.class);
 
 	/*
-	 * this sessions must load DistributedSessionsConcurrentHashMap from spring
+	 * this sessions must load DistributedSessionsConcurrentHashMap
 	 */
 	protected Map<String, Session> sessions;
 
-	// = new DistributedSessionsConcurrentHashMap<String, Session>(new
-	// MemCachedControler());
-
-	/*
-	 * (non-Javadoc) <p>Title: load</p> <p>Description: </p>
-	 * 
-	 * @throws ClassNotFoundException
-	 * 
-	 * @throws IOException
-	 * 
-	 * @see org.apache.catalina.Manager#load()
-	 */
 	@Override
-	public void load() throws ClassNotFoundException, IOException {
+	public void load() {
 		// TODO Auto-generated method stub
-		super.load();
+		System.out.println("TomcatProxy loading");
+
+	}
+
+	@Override
+	public void unload() {
+		// TODO Auto-generated method stub
+		System.out.println("unloading");
+	}
+
+	@Override
+	protected void initInternal() throws LifecycleException {
+
+		super.initInternal();
+
+		this.setDistributable(true);
 		
-		XMemcachedClientBuilder builder=new XMemcachedClientBuilder(AddrUtil.getAddresses(this.getAddresses()));
+		// after super.startInternal,we load our own properties
+		this.setMaxActiveSessions(-1);
+	}
+
+	@Override
+	protected synchronized void startInternal() throws LifecycleException {
+		super.startInternal();
+
+		XMemcachedClientBuilder builder = new XMemcachedClientBuilder(AddrUtil.getAddresses(this.getAddresses()));
 		builder.setSessionLocator(new KetamaMemcachedSessionLocator());
-		MemcachedClient memCachedClient=builder.build();
-		MemCachedControlerInf memCachedControler=new MemCachedControler(memCachedClient);
-		BackupControlerInf backupControler=new ConsistentBackupControler(memCachedControler);
-		this.sessions = new DistributedSessionsConcurrentHashMap<String, Session>(memCachedControler,this.getMaxInactiveInterval(),backupControler,5);
+		builder.setFailureMode(true);
+
+		MemcachedClient memCachedClient = null;
+
+		try {
+			memCachedClient = builder.build();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		MemCachedControlerInf memCachedControler = new MemCachedControler(memCachedClient);
+		BackupControlerInf backupControler = new ConsistentBackupControler(memCachedControler);
+		this.setSessions(new DistributedSessionsConcurrentHashMap<String, Session>(memCachedControler, this
+				.getMaxInactiveInterval(), backupControler, 5));
+
+		System.out.println(this.getNodeName());
+
 		this.sessionIdGenerator.setJvmRoute(this.getNodeName());
+
+		this.setState(LifecycleState.STARTING);
+	}
+
+	@Override
+	protected synchronized void stopInternal() throws LifecycleException {
+		if (log.isDebugEnabled())
+			log.debug("Stopping");
+
+		// this.unload();
+
+		this.setState(LifecycleState.STOPPING);
+
+		// Require a new random number generator if we are restarted
+		super.stopInternal();
 	}
 
 	/*
-	 * (non-Javadoc) <p>Title: unload</p> <p>Description: </p>
+	 * (non-Javadoc) <p>Title: getActiveSessions</p> <p>Description: for
+	 * distributedSession,accounting active sessions is a unnecessary</p>
 	 * 
-	 * @throws IOException
+	 * @return 0
 	 * 
-	 * @see org.apache.catalina.Manager#unload()
+	 * @see org.apache.catalina.session.ManagerBase#getActiveSessions()
 	 */
 	@Override
-	public void unload() throws IOException {
-		// TODO Auto-generated method stub
-		super.unload();
+	public int getActiveSessions() {
+		return 0;
+	}
+
+	// attention
+	@Override
+	public Session findSession(String id) throws IOException {
+
+		if (id == null)
+			return (null);
+		return sessions.get(id);
+
+	}
+
+	@Override
+	public void processExpires() {
+
+	}
+
+	/*
+	 * (non-Javadoc) <p>Title: findSessions</p> <p>Description: i can not find
+	 * this method is helpful</p>
+	 * 
+	 * @return null
+	 * 
+	 * @see org.apache.catalina.session.ManagerBase#findSessions()
+	 */
+	@Override
+	public Session[] findSessions() {
+		return null;
 	}
 
 	public String getNodeName() {
@@ -117,15 +192,6 @@ public class TomcatProxy extends StandardManager {
 
 	public void setNodeName(String nodeName) {
 		this.nodeName = nodeName;
-	}
-
-	/**
-	 * Return the set of active Sessions associated with this Manager. If this
-	 * Manager has no active Sessions, a zero-length array is returned.
-	 */
-	@Override
-	public Session[] findSessions() {
-		return null;
 	}
 
 	public Integer getRetryTime() {

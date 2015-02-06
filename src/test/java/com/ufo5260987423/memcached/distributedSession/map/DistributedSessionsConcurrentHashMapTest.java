@@ -95,7 +95,7 @@ public class DistributedSessionsConcurrentHashMapTest {
 	public void testContainsKey() {
 		try {
 			this.getMap().put("testContainsKey", "testContainsKey");
-			assertEquals(this.getMap().containsKey("testContainsKey"), true);
+			assertEquals(this.getMap().containsKey("testContainsKey")&&(!this.getMap().containsKey("test")), true);
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail();

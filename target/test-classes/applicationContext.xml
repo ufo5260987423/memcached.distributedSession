@@ -17,7 +17,7 @@
 		class="net.rubyeye.xmemcached.utils.XMemcachedClientFactoryBean"
 		destroy-method="shutdown">
 		<property name="servers">
-			<value>192.168.0.105:11211 192.168.0.104:11211</value>
+			<value>192.168.0.104:11211</value>
 		</property>
 		<!-- nio connection pool size -->
 		<property name="connectionPoolSize" value="2"></property>

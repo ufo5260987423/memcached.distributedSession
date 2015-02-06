@@ -43,6 +43,7 @@ public class DistributedSessionsConcurrentHashMap<KEY, VALUE> implements Map<KEY
 
 	public DistributedSessionsConcurrentHashMap(MemCachedControlerInf memCachedControler, int survivingTime,
 			BackupControlerInf backupControler, int retryTimes) {
+		System.out.println("DistributedSessionsConcurrentHashMap");
 		this.setMemCachedControler(memCachedControler);
 		this.setSurvivingTime(survivingTime);
 		this.setRetryTimes(retryTimes);
@@ -61,8 +62,7 @@ public class DistributedSessionsConcurrentHashMap<KEY, VALUE> implements Map<KEY
 		// TODO Auto-generated method stub
 		Integer result = new Integer(0);
 		try {
-			Iterator<Entry<InetSocketAddress, Map<String, String>>> i = 
-					this.getMemCachedControler().getStat()
+			Iterator<Entry<InetSocketAddress, Map<String, String>>> i = this.getMemCachedControler().getStat()
 					.entrySet().iterator();
 
 			while (i.hasNext())
@@ -147,6 +147,7 @@ public class DistributedSessionsConcurrentHashMap<KEY, VALUE> implements Map<KEY
 	@Override
 	public VALUE get(Object key) {
 		// TODO Auto-generated method stub
+		System.out.println("DistributedSessionsConcurrentHashMap#get");
 		if (null == key)
 			throw new NullPointerException();
 
@@ -180,9 +181,13 @@ public class DistributedSessionsConcurrentHashMap<KEY, VALUE> implements Map<KEY
 	@Override
 	public VALUE put(KEY key, VALUE value) {
 		// TODO Auto-generated method stub
+		System.out.println("DistributedSessionsConcurrentHashMap#set");
 		try {
-			for (int i = 0; i < this.getRetryTimes()
-					&& !this.getMemCachedControler().casSet(key.toString(), this.getSurvivingTime(), value); i++)
+			for (int i = 0; 
+					i < this.getRetryTimes()
+					&& !this.getMemCachedControler()
+						.casSet(key.toString(), this.getSurvivingTime(), value)
+					; i++)
 				;
 			this.getBackupControler().casSet(key.toString(), this.getSurvivingTime(), value);
 		} catch (Exception e) {
