@@ -43,7 +43,7 @@ public class DistributedSessionsConcurrentHashMap<KEY, VALUE> implements Map<KEY
 
 	public DistributedSessionsConcurrentHashMap(MemCachedControlerInf memCachedControler, int survivingTime,
 			BackupControlerInf backupControler, int retryTimes) {
-		System.out.println("DistributedSessionsConcurrentHashMap");
+
 		this.setMemCachedControler(memCachedControler);
 		this.setSurvivingTime(survivingTime);
 		this.setRetryTimes(retryTimes);
@@ -106,8 +106,8 @@ public class DistributedSessionsConcurrentHashMap<KEY, VALUE> implements Map<KEY
 
 		boolean result = false;
 		try {
-			result = this.getMemCachedControler().isExist(key.toString())
-					|| this.getBackupControler().isExist(key.toString());
+			result = this.getMemCachedControler().isExist(key.toString(),this.getSurvivingTime())
+					|| this.getBackupControler().isExist(key.toString(),this.getSurvivingTime());
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -147,17 +147,18 @@ public class DistributedSessionsConcurrentHashMap<KEY, VALUE> implements Map<KEY
 	@Override
 	public VALUE get(Object key) {
 		// TODO Auto-generated method stub
-		System.out.println("DistributedSessionsConcurrentHashMap#get");
 		if (null == key)
 			throw new NullPointerException();
+		
+		System.out.println("DistributedSessionsConcurrentHashMap#get\t"+key.toString());
 
 		VALUE result = null;
 		try {
-			result = (VALUE) this.getMemCachedControler().get(key.toString());
+			result = (VALUE) this.getMemCachedControler().get(key.toString(),this.getSurvivingTime());
 			if (null == result)
-				result = (VALUE) this.getBackupControler().get(key.toString());
+				result = (VALUE) this.getBackupControler().get(key.toString(),this.getSurvivingTime());
 			else
-				this.getBackupControler().activeAllBackup(key.toString());
+				this.getBackupControler().activeAllBackup(key.toString(),this.getSurvivingTime());
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -181,7 +182,7 @@ public class DistributedSessionsConcurrentHashMap<KEY, VALUE> implements Map<KEY
 	@Override
 	public VALUE put(KEY key, VALUE value) {
 		// TODO Auto-generated method stub
-		System.out.println("DistributedSessionsConcurrentHashMap#set");
+		System.out.println("DistributedSessionsConcurrentHashMap#set\t"+key.toString());
 		try {
 			for (int i = 0; 
 					i < this.getRetryTimes()

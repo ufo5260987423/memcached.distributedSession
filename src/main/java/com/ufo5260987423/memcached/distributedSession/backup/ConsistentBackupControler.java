@@ -191,16 +191,16 @@ public class ConsistentBackupControler implements BackupControlerInf {
 	 */
 	@SuppressWarnings("finally")
 	@Override
-	public Object get(String key) {
+	public Object get(String key,int exp) {
 		// TODO Auto-generated method stub
 		String tmp = key;
 		Object result = null;
 		try {
 			for (int i = 0; i < this.getBackupAmount(); i++) {
 				tmp = this.hash(tmp);
-				result = this.getMemCachedControler().get(tmp);
+				result = this.getMemCachedControler().get(tmp,exp);
 				if (null != result) {
-					this.activeAllBackup(key);
+					this.activeAllBackup(key,exp);
 					break;
 				}
 			}
@@ -261,14 +261,14 @@ public class ConsistentBackupControler implements BackupControlerInf {
 	 */
 	@SuppressWarnings("finally")
 	@Override
-	public Boolean isExist(String key) {
+	public Boolean isExist(String key,int exp) {
 		// TODO Auto-generated method stub
 		String tmp = key;
 		Boolean result = false;
 		try {
 			for (int i = 0; i < this.getBackupAmount(); i++) {
 				tmp = this.hash(tmp);
-				result = result || this.getMemCachedControler().isExist(tmp);
+				result = result || this.getMemCachedControler().isExist(tmp,exp);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -288,9 +288,9 @@ public class ConsistentBackupControler implements BackupControlerInf {
 	 * #activeAllBackup(java.lang.String)
 	 */
 	@Override
-	public void activeAllBackup(String key) {
+	public void activeAllBackup(String key,int exp) {
 		// TODO Auto-generated method stub
-		this.isExist(key);
+		this.isExist(key,exp);
 	}
 
 }

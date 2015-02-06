@@ -29,9 +29,9 @@ import com.ufo5260987423.memcached.distributedSession.memCached.MemCachedControl
  */
 public interface BackupControlerInf {
 	
-	public void activeAllBackup(String key);
+	public void activeAllBackup(String key,int exp);
 	
-	public Boolean isExist(String key);
+	public Boolean isExist(String key,int exp);
 	
 	public int getBackupAmount();
 
@@ -51,7 +51,7 @@ public interface BackupControlerInf {
 	 */
 	public Boolean casSet(String key, int exp, Object value);
 
-	public Object get(String key);
+	public Object get(String key,int exp);
 
 	public Boolean remove(String key);
 

@@ -87,7 +87,7 @@ public class ConsistentBackupControlerTest {
 	public void testGet() {
 		try {
 			this.getConsistentBackupControler().set("testGet", 10, "testGet");
-			assertEquals(this.getConsistentBackupControler().get("testGet").equals("testGet"), true);
+			assertEquals(this.getConsistentBackupControler().get("testGet",10).equals("testGet"), true);
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail();
@@ -119,7 +119,7 @@ public class ConsistentBackupControlerTest {
 	public void testIsExist() {
 		try {
 			this.getConsistentBackupControler().set("testIsExist", 10, "testIsExist");
-			assertEquals(this.getConsistentBackupControler().isExist("testIsExist"), true);
+			assertEquals(this.getConsistentBackupControler().isExist("testIsExist",10), true);
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail();

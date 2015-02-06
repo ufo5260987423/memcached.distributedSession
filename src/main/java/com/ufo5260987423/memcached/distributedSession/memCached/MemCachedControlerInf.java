@@ -42,7 +42,7 @@ public interface MemCachedControlerInf {
 	 * @throws InterruptedException 
 	 * @throws TimeoutException 
 	 */
-	public Boolean isExist(String key) throws TimeoutException, InterruptedException, MemcachedException;
+	public Boolean isExist(String key,int exp) throws TimeoutException, InterruptedException, MemcachedException;
 	
 	public void setMemcachedClient(MemcachedClient memcachedClient);
 
@@ -64,7 +64,7 @@ public interface MemCachedControlerInf {
 	public Boolean casSet(String key, int exp, Object value) throws TimeoutException, InterruptedException,
 			MemcachedException;
 
-	public Object get(String key) throws TimeoutException, InterruptedException, MemcachedException;
+	public Object get(String key,int exp) throws TimeoutException, InterruptedException, MemcachedException;
 
 	public Boolean remove(String key) throws TimeoutException, InterruptedException, MemcachedException;
 

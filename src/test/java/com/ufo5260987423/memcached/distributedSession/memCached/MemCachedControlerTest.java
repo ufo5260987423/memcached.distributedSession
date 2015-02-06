@@ -59,7 +59,7 @@ public class MemCachedControlerTest {
 		try {
 			this.getMemCachedControler().set("testClear", 10, "testClear");
 			this.getMemCachedControler().clear();
-			assertEquals(null==this.getMemCachedControler().get("testClear"), false);
+			assertEquals(null==this.getMemCachedControler().get("testClear",10), false);
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail();
@@ -75,7 +75,7 @@ public class MemCachedControlerTest {
 	public void testGet() {
 		try {
 			this.getMemCachedControler().set("testGet", 10, "testGet");
-			assertEquals(this.getMemCachedControler().get("testGet").equals("testGet"), true);
+			assertEquals(this.getMemCachedControler().get("testGet",10).equals("testGet"), true);
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail();
@@ -107,7 +107,7 @@ public class MemCachedControlerTest {
 	public void testIsExist() {
 		try {
 			this.getMemCachedControler().set("testIsExist", 10, "testIsExist");
-			assertEquals(this.getMemCachedControler().isExist("testIsExist"), true);
+			assertEquals(this.getMemCachedControler().isExist("testIsExist",10), true);
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail();
