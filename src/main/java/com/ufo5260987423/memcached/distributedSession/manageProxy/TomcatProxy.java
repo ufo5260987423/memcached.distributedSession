@@ -79,6 +79,7 @@ public class TomcatProxy extends ManagerBase {
 	 */
 	protected Map<String, Session> sessions;
 
+	// ---------------------------------------for Lifecycle
 	@Override
 	public void load() {
 		// TODO Auto-generated method stub
@@ -98,7 +99,7 @@ public class TomcatProxy extends ManagerBase {
 		super.initInternal();
 
 		this.setDistributable(true);
-		
+
 		// after super.startInternal,we load our own properties
 		this.setMaxActiveSessions(-1);
 	}
@@ -123,7 +124,7 @@ public class TomcatProxy extends ManagerBase {
 		MemCachedControlerInf memCachedControler = new MemCachedControler(memCachedClient);
 		BackupControlerInf backupControler = new ConsistentBackupControler(memCachedControler);
 		this.setSessions(new DistributedSessionsConcurrentHashMap<String, Session>(memCachedControler, this
-				.getMaxInactiveInterval(), backupControler, 5));
+				.getMaxInactiveInterval(), backupControler, 1));
 
 		System.out.println(this.getNodeName());
 
@@ -145,6 +146,8 @@ public class TomcatProxy extends ManagerBase {
 		super.stopInternal();
 	}
 
+	// -----------------------------------for Manager
+
 	/*
 	 * (non-Javadoc) <p>Title: getActiveSessions</p> <p>Description: for
 	 * distributedSession,accounting active sessions is a unnecessary</p>
@@ -162,11 +165,25 @@ public class TomcatProxy extends ManagerBase {
 	@Override
 	public Session findSession(String id) throws IOException {
 
+		System.out.println("findSession\t"+id);
 		if (id == null)
 			return (null);
 		return sessions.get(id);
 
 	}
+
+	@Override
+	public void add(Session session) {
+		System.out.println("add\t"+session.getId());
+		sessions.put(session.getIdInternal(), session);
+	}
+	
+	@Override
+    public void remove(Session session, boolean update) {
+        if (session.getIdInternal() != null) {
+            sessions.remove(session.getIdInternal());
+        }
+    }
 
 	@Override
 	public void processExpires() {
