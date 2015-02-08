@@ -4,7 +4,7 @@
 
 	<groupId>com.ufo5260987423</groupId>
 	<artifactId>memcached.distributedSession</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.1.0-alpha</version>
 	<packaging>jar</packaging>
 
 	<name>memcached.distributedSession</name>

@@ -187,6 +187,7 @@ public class TomcatProxy extends ManagerBase {
 	@Override
 	public void remove(Session session, boolean update) {
 		if (session.getIdInternal() != null) {
+			System.out.println("remove\t"+session.getIdInternal());
 			sessions.remove(session.getIdInternal());
 		}
 	}
@@ -196,14 +197,6 @@ public class TomcatProxy extends ManagerBase {
 
 	}
 
-	/*
-	 * (non-Javadoc) <p>Title: findSessions</p> <p>Description: i can not find
-	 * this method is helpful</p>
-	 * 
-	 * @return null
-	 * 
-	 * @see org.apache.catalina.session.ManagerBase#findSessions()
-	 */
 	@Override
 	public Session[] findSessions() {
 		return null;
