@@ -20,6 +20,7 @@ package com.ufo5260987423.memcached.distributedSession.map;
 
 import static org.junit.Assert.*;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 

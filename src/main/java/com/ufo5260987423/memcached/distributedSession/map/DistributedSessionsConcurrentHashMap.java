@@ -71,7 +71,6 @@ public class DistributedSessionsConcurrentHashMap<KEY, VALUE> implements Map<KEY
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println(result);
 		return result;
 	}
 

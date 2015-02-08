@@ -24,6 +24,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import net.rubyeye.xmemcached.MemcachedClient;
 import net.rubyeye.xmemcached.XMemcachedClientBuilder;
+import net.rubyeye.xmemcached.command.BinaryCommandFactory;
 import net.rubyeye.xmemcached.impl.KetamaMemcachedSessionLocator;
 import net.rubyeye.xmemcached.utils.AddrUtil;
 
@@ -111,6 +112,7 @@ public class TomcatProxy extends ManagerBase {
 		XMemcachedClientBuilder builder = new XMemcachedClientBuilder(AddrUtil.getAddresses(this.getAddresses()));
 		builder.setSessionLocator(new KetamaMemcachedSessionLocator());
 		builder.setFailureMode(true);
+		builder.setCommandFactory(new BinaryCommandFactory());
 
 		MemcachedClient memCachedClient = null;
 
@@ -165,25 +167,31 @@ public class TomcatProxy extends ManagerBase {
 	@Override
 	public Session findSession(String id) throws IOException {
 
-		System.out.println("findSession\t"+id);
+		System.out.println("findSession\t" + id);
 		if (id == null)
 			return (null);
-		return sessions.get(id);
+		Session result = sessions.get(id);
+
+		if (null != result){
+			result.setManager(this);
+		}
+
+		return result;
 
 	}
 
 	@Override
 	public void add(Session session) {
-		System.out.println("add\t"+session.getId());
+		System.out.println("add\t" + session.getId());
 		sessions.put(session.getIdInternal(), session);
 	}
-	
+
 	@Override
-    public void remove(Session session, boolean update) {
-        if (session.getIdInternal() != null) {
-            sessions.remove(session.getIdInternal());
-        }
-    }
+	public void remove(Session session, boolean update) {
+		if (session.getIdInternal() != null) {
+			sessions.remove(session.getIdInternal());
+		}
+	}
 
 	@Override
 	public void processExpires() {
