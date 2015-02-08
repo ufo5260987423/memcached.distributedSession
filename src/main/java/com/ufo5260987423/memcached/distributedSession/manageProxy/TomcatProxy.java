@@ -40,6 +40,7 @@ import com.ufo5260987423.memcached.distributedSession.backup.ConsistentBackupCon
 import com.ufo5260987423.memcached.distributedSession.map.DistributedSessionsConcurrentHashMap;
 import com.ufo5260987423.memcached.distributedSession.memCached.MemCachedControler;
 import com.ufo5260987423.memcached.distributedSession.memCached.MemCachedControlerInf;
+import com.ufo5260987423.memcached.distributedSession.session.TomcatDistributedSession;
 
 /**
  * @ClassName: TomcatProxy
@@ -150,19 +151,16 @@ public class TomcatProxy extends ManagerBase {
 
 	// -----------------------------------for Manager
 
-	/*
-	 * (non-Javadoc) <p>Title: getActiveSessions</p> <p>Description: for
-	 * distributedSession,accounting active sessions is a unnecessary</p>
-	 * 
-	 * @return 0
-	 * 
-	 * @see org.apache.catalina.session.ManagerBase#getActiveSessions()
-	 */
 	@Override
 	public int getActiveSessions() {
 		return 0;
 	}
 
+    @Override
+    public Session createEmptySession() {
+        return (new TomcatDistributedSession(this));
+    }
+	
 	// attention
 	@Override
 	public Session findSession(String id) throws IOException {

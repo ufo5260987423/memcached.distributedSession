@@ -149,8 +149,6 @@ public class DistributedSessionsConcurrentHashMap<KEY, VALUE> implements Map<KEY
 		if (null == key)
 			throw new NullPointerException();
 		
-		System.out.println("DistributedSessionsConcurrentHashMap#get\t"+key.toString());
-
 		VALUE result = null;
 		try {
 			result = (VALUE) this.getMemCachedControler().get(key.toString(),this.getSurvivingTime());
