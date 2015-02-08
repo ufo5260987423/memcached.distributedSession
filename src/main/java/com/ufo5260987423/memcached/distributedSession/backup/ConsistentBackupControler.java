@@ -31,16 +31,16 @@ import com.ufo5260987423.memcached.distributedSession.memCached.MemCachedControl
  *
  */
 public class ConsistentBackupControler implements BackupControlerInf {
-	private final String ALGORITHM = "MD5";
-	private final char[] HEX_DIGITS = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
+	private final static String ALGORITHM = "MD5";
+	private final static char[] HEX_DIGITS = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
 
 	/*
 	 * Advised to be set as 1
 	 */
 	private int backupAmount;
 	private MemCachedControlerInf memCachedControler;
-	
-	public ConsistentBackupControler(MemCachedControlerInf memCachedControler){
+
+	public ConsistentBackupControler(MemCachedControlerInf memCachedControler) {
 		this.setBackupAmount(1);
 		this.setMemCachedControler(memCachedControler);
 	}
@@ -61,7 +61,6 @@ public class ConsistentBackupControler implements BackupControlerInf {
 		return buf.toString();
 	}
 
-	@SuppressWarnings("finally")
 	public String hash(String key) {
 		String result = null;
 		try {
@@ -69,11 +68,9 @@ public class ConsistentBackupControler implements BackupControlerInf {
 			messageDigest.update(key.getBytes());
 			result = this.getFormattedText(messageDigest.digest());
 		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} finally {
-			return result;
 		}
+		return result;
 	}
 
 	public int getBackupAmount() {
@@ -113,10 +110,8 @@ public class ConsistentBackupControler implements BackupControlerInf {
 	 * com.ufo5260987423.memcached.distributedSession.backup.BackupControlerInf
 	 * #set(java.lang.String, int, java.lang.Object)
 	 */
-	@SuppressWarnings("finally")
 	@Override
 	public Boolean set(String key, int exp, Object value) {
-		// TODO Auto-generated method stub
 		String tmp = key;
 		Boolean result = false;
 		try {
@@ -127,9 +122,8 @@ public class ConsistentBackupControler implements BackupControlerInf {
 		} catch (Exception e) {
 			e.printStackTrace();
 			result = false;
-		} finally {
-			return result;
 		}
+		return result;
 	}
 
 	/*
@@ -153,10 +147,8 @@ public class ConsistentBackupControler implements BackupControlerInf {
 	 * com.ufo5260987423.memcached.distributedSession.backup.BackupControlerInf
 	 * #casSet(java.lang.String, int, java.lang.Object)
 	 */
-	@SuppressWarnings("finally")
 	@Override
 	public Boolean casSet(String key, int exp, Object value) {
-		// TODO Auto-generated method stub
 		String tmp = key;
 		Boolean result = false;
 		try {
@@ -167,9 +159,8 @@ public class ConsistentBackupControler implements BackupControlerInf {
 		} catch (Exception e) {
 			e.printStackTrace();
 			result = false;
-		} finally {
-			return result;
 		}
+		return result;
 	}
 
 	/*
@@ -189,26 +180,23 @@ public class ConsistentBackupControler implements BackupControlerInf {
 	 * com.ufo5260987423.memcached.distributedSession.backup.BackupControlerInf
 	 * #get(java.lang.String)
 	 */
-	@SuppressWarnings("finally")
 	@Override
-	public Object get(String key,int exp) {
-		// TODO Auto-generated method stub
+	public Object get(String key, int exp) {
 		String tmp = key;
 		Object result = null;
 		try {
 			for (int i = 0; i < this.getBackupAmount(); i++) {
 				tmp = this.hash(tmp);
-				result = this.getMemCachedControler().get(tmp,exp);
+				result = this.getMemCachedControler().get(tmp, exp);
 				if (null != result) {
-					this.activeAllBackup(key,exp);
+					this.activeAllBackup(key, exp);
 					break;
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
-			return result;
 		}
+		return result;
 	}
 
 	/*
@@ -229,10 +217,8 @@ public class ConsistentBackupControler implements BackupControlerInf {
 	 * com.ufo5260987423.memcached.distributedSession.backup.BackupControlerInf
 	 * #remove(java.lang.String)
 	 */
-	@SuppressWarnings("finally")
 	@Override
 	public Boolean remove(String key) {
-		// TODO Auto-generated method stub
 		String tmp = key;
 		Boolean result = true;
 		try {
@@ -243,9 +229,8 @@ public class ConsistentBackupControler implements BackupControlerInf {
 		} catch (Exception e) {
 			e.printStackTrace();
 			result = false;
-		} finally {
-			return result;
 		}
+		return result;
 	}
 
 	/*
@@ -259,23 +244,19 @@ public class ConsistentBackupControler implements BackupControlerInf {
 	 * com.ufo5260987423.memcached.distributedSession.backup.BackupControlerInf
 	 * #isExist(java.lang.String)
 	 */
-	@SuppressWarnings("finally")
 	@Override
-	public Boolean isExist(String key,int exp) {
-		// TODO Auto-generated method stub
+	public Boolean isExist(String key, int exp) {
 		String tmp = key;
 		Boolean result = false;
 		try {
 			for (int i = 0; i < this.getBackupAmount(); i++) {
 				tmp = this.hash(tmp);
-				result = result || this.getMemCachedControler().isExist(tmp,exp);
+				result = result || this.getMemCachedControler().isExist(tmp, exp);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			result = result || false;
-		} finally {
-			return result;
 		}
+		return result;
 	}
 
 	/*
@@ -288,9 +269,8 @@ public class ConsistentBackupControler implements BackupControlerInf {
 	 * #activeAllBackup(java.lang.String)
 	 */
 	@Override
-	public void activeAllBackup(String key,int exp) {
-		// TODO Auto-generated method stub
-		this.isExist(key,exp);
+	public void activeAllBackup(String key, int exp) {
+		this.isExist(key, exp);
 	}
 
 }

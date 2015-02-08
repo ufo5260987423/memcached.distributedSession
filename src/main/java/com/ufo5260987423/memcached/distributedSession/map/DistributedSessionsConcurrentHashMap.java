@@ -59,7 +59,7 @@ public class DistributedSessionsConcurrentHashMap<KEY, VALUE> implements Map<KEY
 	 */
 	@Override
 	public int size() {
-		// TODO Auto-generated method stub
+
 		Integer result = new Integer(0);
 		try {
 			Iterator<Entry<InetSocketAddress, Map<String, String>>> i = this.getMemCachedControler().getStat()
@@ -68,7 +68,6 @@ public class DistributedSessionsConcurrentHashMap<KEY, VALUE> implements Map<KEY
 			while (i.hasNext())
 				result += Integer.parseInt(i.next().getValue().get("curr_items"));
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return result;
@@ -83,7 +82,6 @@ public class DistributedSessionsConcurrentHashMap<KEY, VALUE> implements Map<KEY
 	 */
 	@Override
 	public boolean isEmpty() {
-		// TODO Auto-generated method stub
 		return 0 == this.size();
 	}
 
@@ -96,10 +94,9 @@ public class DistributedSessionsConcurrentHashMap<KEY, VALUE> implements Map<KEY
 	 * 
 	 * @see java.util.Map#containsKey(java.lang.Object)
 	 */
-	@SuppressWarnings("finally")
 	@Override
 	public boolean containsKey(Object key) {
-		// TODO Auto-generated method stub
+
 		if (null == key)
 			throw new NullPointerException();
 
@@ -109,11 +106,9 @@ public class DistributedSessionsConcurrentHashMap<KEY, VALUE> implements Map<KEY
 					|| this.getBackupControler().isExist(key.toString(),this.getSurvivingTime());
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} finally {
-			return result;
 		}
+		return result;
 	}
 
 	/*
@@ -129,7 +124,6 @@ public class DistributedSessionsConcurrentHashMap<KEY, VALUE> implements Map<KEY
 	 */
 	@Override
 	public boolean containsValue(Object value) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -142,10 +136,10 @@ public class DistributedSessionsConcurrentHashMap<KEY, VALUE> implements Map<KEY
 	 * 
 	 * @see java.util.Map#get(java.lang.Object)
 	 */
-	@SuppressWarnings({ "finally", "unchecked" })
+	@SuppressWarnings("unchecked")
 	@Override
 	public VALUE get(Object key) {
-		// TODO Auto-generated method stub
+
 		if (null == key)
 			throw new NullPointerException();
 		
@@ -158,9 +152,8 @@ public class DistributedSessionsConcurrentHashMap<KEY, VALUE> implements Map<KEY
 				this.getBackupControler().activeAllBackup(key.toString(),this.getSurvivingTime());
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
-			return result;
 		}
+		return result;
 	}
 
 	/*
@@ -175,11 +168,9 @@ public class DistributedSessionsConcurrentHashMap<KEY, VALUE> implements Map<KEY
 	 * 
 	 * @see java.util.Map#put(java.lang.Object, java.lang.Object)
 	 */
-	@SuppressWarnings("finally")
 	@Override
 	public VALUE put(KEY key, VALUE value) {
-		// TODO Auto-generated method stub
-		System.out.println("DistributedSessionsConcurrentHashMap#set\t"+key.toString());
+
 		try {
 			for (int i = 0; 
 					i < this.getRetryTimes()
@@ -190,9 +181,8 @@ public class DistributedSessionsConcurrentHashMap<KEY, VALUE> implements Map<KEY
 			this.getBackupControler().casSet(key.toString(), this.getSurvivingTime(), value);
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
-			return value;
 		}
+			return value;
 	}
 
 	/*
@@ -204,18 +194,15 @@ public class DistributedSessionsConcurrentHashMap<KEY, VALUE> implements Map<KEY
 	 * 
 	 * @see java.util.Map#remove(java.lang.Object)
 	 */
-	@SuppressWarnings("finally")
 	@Override
 	public VALUE remove(Object key) {
-		// TODO Auto-generated method stub
 		try {
 			this.getMemCachedControler().remove(key.toString());
 			this.getBackupControler().remove(key.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
-			return null;
 		}
+		return null;
 	}
 
 	/*
@@ -228,7 +215,6 @@ public class DistributedSessionsConcurrentHashMap<KEY, VALUE> implements Map<KEY
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void putAll(Map<? extends KEY, ? extends VALUE> m) {
-		// TODO Auto-generated method stub
 		Iterator<?> i = m.entrySet().iterator();
 		while (i.hasNext()) {
 			Map.Entry entry = (Map.Entry) i.next();
@@ -248,12 +234,10 @@ public class DistributedSessionsConcurrentHashMap<KEY, VALUE> implements Map<KEY
 	 */
 	@Override
 	public void clear() {
-		// TODO Auto-generated method stub
+
 		try {
 			this.getMemCachedControler().clear();
-			;
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -269,7 +253,6 @@ public class DistributedSessionsConcurrentHashMap<KEY, VALUE> implements Map<KEY
 	 */
 	@Override
 	public Set<KEY> keySet() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -284,7 +267,6 @@ public class DistributedSessionsConcurrentHashMap<KEY, VALUE> implements Map<KEY
 	 */
 	@Override
 	public Collection<VALUE> values() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -299,7 +281,6 @@ public class DistributedSessionsConcurrentHashMap<KEY, VALUE> implements Map<KEY
 	 */
 	@Override
 	public Set<java.util.Map.Entry<KEY, VALUE>> entrySet() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

@@ -25,7 +25,7 @@ import org.apache.catalina.session.StandardSession;
 
 /**
  * @ClassName: TomcatDistributedSession
- * @Description: TODO
+ * @Description: A Proxy replacing some method of StandardSession
  * @author ufo ufo5260987423@163.com
  * @date 2015年2月8日 下午2:55:41
  *
@@ -45,7 +45,6 @@ public class TomcatDistributedSession extends StandardSession{
 	public TomcatDistributedSession(Manager manager) {
 		super(manager);
         this.manager = manager;
-        System.out.println("TomcatDistributedSession new Instance");
         // Initialize access count
         if (ACTIVITY_CHECK) {
             accessCount = new AtomicInteger();
@@ -68,7 +67,6 @@ public class TomcatDistributedSession extends StandardSession{
     	Object oldValue = attributes.put(name, value);
     	
     	if(!value.equals(oldValue)){
-    		System.out.println("add "+name);
     		this.getManager().add(this);
     	}
     }

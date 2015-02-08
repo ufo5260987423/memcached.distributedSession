@@ -44,7 +44,7 @@ import com.ufo5260987423.memcached.distributedSession.session.TomcatDistributedS
 
 /**
  * @ClassName: TomcatProxy
- * @Description: TODO
+ * @Description: A Tomcat Proxy To manage session 
  * @author ufo ufo5260987423@163.com
  * @date 2015年1月28日 下午1:34:14
  *
@@ -84,14 +84,12 @@ public class TomcatProxy extends ManagerBase {
 	// ---------------------------------------for Lifecycle
 	@Override
 	public void load() {
-		// TODO Auto-generated method stub
 		System.out.println("TomcatProxy loading");
 
 	}
 
 	@Override
 	public void unload() {
-		// TODO Auto-generated method stub
 		System.out.println("unloading");
 	}
 
@@ -120,7 +118,6 @@ public class TomcatProxy extends ManagerBase {
 		try {
 			memCachedClient = builder.build();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -158,7 +155,7 @@ public class TomcatProxy extends ManagerBase {
 
     @Override
     public Session createEmptySession() {
-        return (new TomcatDistributedSession(this));
+        return new TomcatDistributedSession(this);
     }
 	
 	// attention

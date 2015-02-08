@@ -112,7 +112,6 @@ public class MemCachedControler implements MemCachedControlerInf {
 	 */
 	@Override
 	public synchronized void addServer(String serverIp, Integer port, Integer weight) throws IOException {
-		// TODO Auto-generated method stub
 		this.getMemcachedClient().addServer(serverIp, port, weight);
 	}
 
@@ -128,7 +127,6 @@ public class MemCachedControler implements MemCachedControlerInf {
 	 */
 	@Override
 	public synchronized void removeServer(String serverIp, Integer port) {
-		// TODO Auto-generated method stub
 		this.getMemcachedClient().removeServer(serverIp + " " + port);
 	}
 
@@ -142,7 +140,6 @@ public class MemCachedControler implements MemCachedControlerInf {
 	 */
 	@Override
 	public void clear() throws TimeoutException, InterruptedException, MemcachedException {
-		// TODO Auto-generated method stub
 		this.getMemcachedClient().flushAll();
 	}
 
