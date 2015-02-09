@@ -44,7 +44,7 @@ import com.ufo5260987423.memcached.distributedSession.session.TomcatDistributedS
 
 /**
  * @ClassName: TomcatProxy
- * @Description: A Tomcat Proxy To manage session 
+ * @Description: A Tomcat Proxy To manage session
  * @author ufo ufo5260987423@163.com
  * @date 2015年1月28日 下午1:34:14
  *
@@ -66,8 +66,9 @@ public class TomcatProxy extends ManagerBase {
 	 * identify this tomcat node
 	 */
 	private String nodeName;
-	private Integer retryTime;
+	private String retryTime;
 	private String addresses;
+	private String backupAmount;
 
 	protected boolean distributable = true;
 	/**
@@ -122,9 +123,10 @@ public class TomcatProxy extends ManagerBase {
 		}
 
 		MemCachedControlerInf memCachedControler = new MemCachedControler(memCachedClient);
-		BackupControlerInf backupControler = new ConsistentBackupControler(memCachedControler);
+		BackupControlerInf backupControler = new ConsistentBackupControler(Integer.parseInt(this.getBackupAmount()),
+				memCachedControler);
 		this.setSessions(new DistributedSessionsConcurrentHashMap<String, Session>(memCachedControler, this
-				.getMaxInactiveInterval(), backupControler, 1));
+				.getMaxInactiveInterval(), backupControler, Integer.parseInt(this.getRetryTime())));
 
 		System.out.println(this.getNodeName());
 
@@ -153,11 +155,11 @@ public class TomcatProxy extends ManagerBase {
 		return 0;
 	}
 
-    @Override
-    public Session createEmptySession() {
-        return new TomcatDistributedSession(this);
-    }
-	
+	@Override
+	public Session createEmptySession() {
+		return new TomcatDistributedSession(this);
+	}
+
 	// attention
 	@Override
 	public Session findSession(String id) throws IOException {
@@ -167,7 +169,7 @@ public class TomcatProxy extends ManagerBase {
 			return (null);
 		Session result = sessions.get(id);
 
-		if (null != result){
+		if (null != result) {
 			result.setManager(this);
 		}
 
@@ -184,7 +186,7 @@ public class TomcatProxy extends ManagerBase {
 	@Override
 	public void remove(Session session, boolean update) {
 		if (session.getIdInternal() != null) {
-			System.out.println("remove\t"+session.getIdInternal());
+			System.out.println("remove\t" + session.getIdInternal());
 			sessions.remove(session.getIdInternal());
 		}
 	}
@@ -207,11 +209,11 @@ public class TomcatProxy extends ManagerBase {
 		this.nodeName = nodeName;
 	}
 
-	public Integer getRetryTime() {
-		return retryTime;
+	public String getRetryTime() {
+		return null==retryTime?"1":retryTime;
 	}
 
-	public void setRetryTime(Integer retryTime) {
+	public void setRetryTime(String retryTime) {
 		this.retryTime = retryTime;
 	}
 
@@ -246,6 +248,14 @@ public class TomcatProxy extends ManagerBase {
 	@Override
 	public String getInfo() {
 		return info;
+	}
+
+	public String getBackupAmount() {
+		return null==backupAmount?"0":backupAmount;
+	}
+
+	public void setBackupAmount(String backupAmount) {
+		this.backupAmount = backupAmount;
 	}
 
 }
